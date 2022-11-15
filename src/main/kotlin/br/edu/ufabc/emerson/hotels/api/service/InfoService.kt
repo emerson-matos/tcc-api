@@ -6,6 +6,5 @@ import java.math.BigDecimal
 
 @Service
 class InfoService {
-    fun getInfo(): List<Place> = listOf(Place(), Place("1", BigDecimal.TEN))
-
+    fun getInfo(): List<Place> = listOf(Place(), Place())
 }

@@ -1,9 +1,8 @@
 package br.edu.ufabc.emerson.hotels.api.models
 
-import java.math.BigDecimal
+import com.google.maps.model.PlaceDetails
+import kotlinx.serialization.Serializable
 
 data class Place(
-    val name: String = "Teste",
-    val price: BigDecimal = BigDecimal.ONE,
-    val reviews: List<String> = listOf("Aval", "RUims")
+    val place: Int = 0
 )

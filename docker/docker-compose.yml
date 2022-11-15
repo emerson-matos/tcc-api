@@ -1,23 +1,23 @@
 version: '3.9'
 services:
-  api:
-    build:
-      context: ~/git/tcc/hotels-api
-      dockerfile: "docker/Dockerfile"
-    container_name: hotels-api
-    ports:
-      - "8080:8080"
-      - "5005:5005"
-    volumes:
-      - /home/emerson/gradle:/home/gradle/.gradle
-      - ~/git/tcc/hotels-api/build:/home/gradle/src/build
-    depends_on:
-      - db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#  api:
+#    build:
+#      context: ~/git/tcc/hotels-api
+#      dockerfile: "docker/Dockerfile"
+#    container_name: hotels-api
+#    ports:
+#      - "8080:8080"
+#      - "5005:5005"
+#    volumes:
+#      - /home/emerson/gradle:/home/gradle/.gradle
+#      - ~/git/tcc/hotels-api/build:/home/gradle/src/build
+#    depends_on:
+#      - db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=password
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
   db:
     image: postgres:14
     container_name: db
@@ -46,6 +46,21 @@ services:
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     restart: unless-stopped
+  chrome:
+    image: selenium/node-chrome:4.4.0-20220831
+    shm_size: 2gb
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_START_XVFB=false
+    deploy:
+      replicas: 4
+    entrypoint: bash -c 'SE_OPTS="--host $$HOSTNAME" /opt/bin/entry_point.sh'
 
-volumes:
-  db-pgdata:
+  selenium-hub:
+    image: selenium/hub:4.4.0-20220831
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
